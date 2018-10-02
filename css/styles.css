@@ -132,6 +132,11 @@ nav h1 a {
   margin: 0 20px;
 }
 
+.filter-options label {
+  left: -5000px;
+  position: absolute;  
+}
+
 
 .filter-options select {
   background-color: white;
