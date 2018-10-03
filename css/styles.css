@@ -331,7 +331,7 @@ nav h1 a {
   width: 100%;
 }
 
-#reviews-list li, #reviewForm {
+#reviews-list li {
   background-color: #fff;
   display: flex;
   flex-wrap:wrap;
@@ -340,6 +340,7 @@ nav h1 a {
   overflow: hidden;
   padding: 0;
   position: relative;
+  border-radius: 13px 0 13px 0;
 }
 
 #reviews-list li p {
