@@ -54,7 +54,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 
 /* ====================== Navigation ====================== */
 nav {
-  width: 100%;
+  width: calc(100% - 60px);
   height: 50px;
   background-color: #252831;
   text-align:center;
@@ -113,7 +113,7 @@ nav h1 a {
 }
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
-  width: 100%;
+  width: calc(100% - 20px);
   height: 100%;
   background-color: #3397DB;
   align-items: center;
@@ -448,6 +448,14 @@ nav h1 a {
   .inside header {
     width: calc(100% - 10px);
   }
+
+  .filter-options {
+    width: 100%;
+  }
+
+  .nav {
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 791px) {
@@ -456,6 +464,7 @@ nav h1 a {
 
   nav {
     padding: 30px 0;
+    width: 100%;
   }
 
   #restaurants-list {
@@ -471,6 +480,7 @@ nav h1 a {
     display: flex;
     flex-direction: column;
     padding: 0;
+    width: 100%;
   }
   
   .filter-options h2 {
