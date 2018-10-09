@@ -1,0 +1,22 @@
+{
+  "name": "volkan_mws2",
+  "version": "1.0.0",
+  "description": "Mobile Web Specialist Stage 2",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": " \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vunaldev/UdacityMWSProject1.git"
+  },
+  "author": "Volkan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vunaldev/UdacityMWSProject1/issues"
+  },
+  "homepage": "https://github.com/vunaldev/UdacityMWSProject1#readme",
+  "dependencies": {
+    "idb": "^2.1.3"
+  }
+}

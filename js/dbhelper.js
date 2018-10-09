@@ -1,3 +1,5 @@
+import idb from 'idb';
+
 /**
  * Common database helper functions.
  */
@@ -12,24 +14,59 @@ class DBHelper {
     return `http://localhost:${port}/data/restaurants.json`;
   }
 
+static openDatabase() {
+  return idb.open('restaurants', 1, function(upgradeDB) {
+      upgradeDB.createObjectStore('allrestaurants', {keyPath: 'id'});
+      upgradeDB.createObjectStore('allreviews', {keyPath: 'id'});
+      upgradeDB.createObjectStore('offline-ewviews', {keyPath: 'updatedAt'});
+  });
+}
+
+
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
+
+    //check cached data
+
+    DBHelper.openDatabase().then(db => {
+      if(!db) {
+        return;
       }
-    };
-    xhr.send();
-  }
+
+      const tx = db.transaction('allrestaurants');
+      const store = tx.createObjectStore('allrestaurants');
+
+      store.getAll().then( restaurants => {
+
+        if(restaurants.length === 0) {
+
+          fetch('http://localhost:1337/restaurants', {
+            credentials: 'same-origin'
+          }).then(response =>
+             response.json()
+          ).then(result => {
+      
+            //add to cache
+
+            const transaction = db.transaction('allrestaurants', 'readwrite');
+            const store = db.objectStore('allrestaurants');
+
+            for(restaurant of restaurants) {
+              store.put(restaurant);
+            }
+
+            callback(null, restaurants);            
+      
+          }).catch(error =>  callback(error, null));
+        } 
+      })
+    })
+
+   
+
+  }  
 
   /**
    * Fetch a restaurant by its ID.
@@ -150,7 +187,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.photograph}.jpg`);
   }
 
   /**
