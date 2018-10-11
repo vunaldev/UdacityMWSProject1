@@ -1,4 +1,4 @@
-import idb from 'idb';
+//import idb from 'idb';
 
 /**
  * Common database helper functions.
@@ -16,7 +16,12 @@ class DBHelper {
 
 static openDatabase() {
   return idb.open('restaurants', 1, function(upgradeDB) {
-      upgradeDB.createObjectStore('allrestaurants', {keyPath: 'id'});
+      var store = upgradeDB.createObjectStore('allrestaurants', {keyPath: 'id'});
+
+      store.createIndex('cuisine','cuisine_type');
+      store.createIndex('neighbor','neighborhood');
+
+
       upgradeDB.createObjectStore('allreviews', {keyPath: 'id'});
       upgradeDB.createObjectStore('offline-ewviews', {keyPath: 'updatedAt'});
   });
@@ -29,16 +34,15 @@ static openDatabase() {
   static fetchRestaurants(callback) {
 
     //check cached data
-
     DBHelper.openDatabase().then(db => {
       if(!db) {
         return;
       }
 
-      const tx = db.transaction('allrestaurants');
-      const store = tx.createObjectStore('allrestaurants');
+      const transaction = db.transaction('allrestaurants');
+      const store = transaction.objectStore('allrestaurants');
 
-      store.getAll().then( restaurants => {
+      store.getAll().then(restaurants => {
 
         if(restaurants.length === 0) {
 
@@ -48,24 +52,23 @@ static openDatabase() {
              response.json()
           ).then(result => {
       
-            //add to cache
-
+            //add to idb
             const transaction = db.transaction('allrestaurants', 'readwrite');
-            const store = db.objectStore('allrestaurants');
+            const store = transaction.objectStore('allrestaurants');
 
-            for(restaurant of restaurants) {
+            for(let restaurant of result) {
               store.put(restaurant);
             }
 
-            callback(null, restaurants);            
+            callback(null, result);            
       
           }).catch(error =>  callback(error, null));
+        }
+        else {
+          callback(null, restaurants);            
         } 
       })
-    })
-
-   
-
+    })  
   }  
 
   /**
@@ -87,6 +90,7 @@ static openDatabase() {
     });
   }
 
+  
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
