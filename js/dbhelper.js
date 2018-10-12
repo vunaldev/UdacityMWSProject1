@@ -18,12 +18,8 @@ static openDatabase() {
   return idb.open('restaurants', 1, function(upgradeDB) {
       var store = upgradeDB.createObjectStore('allrestaurants', {keyPath: 'id'});
 
-      store.createIndex('cuisine','cuisine_type');
-      store.createIndex('neighbor','neighborhood');
-
-
-      upgradeDB.createObjectStore('allreviews', {keyPath: 'id'});
-      upgradeDB.createObjectStore('offline-ewviews', {keyPath: 'updatedAt'});
+      //store.createIndex('cuisine','cuisine_type');
+      //store.createIndex('neighbor','neighborhood');
   });
 }
 
@@ -60,6 +56,17 @@ static openDatabase() {
               store.put(restaurant);
             }
 
+            store.openCursor(null, 'prev').then(function(cursor) {  
+              return cursor.advance(30);
+            }).then(function deleteRest(cursor) {
+              if(!cursor) {
+                return;
+              }
+
+              cursor.delete();
+              return cursor.continue().then(deleteRest);
+            });
+
             callback(null, result);            
       
           }).catch(error =>  callback(error, null));
@@ -86,39 +93,6 @@ static openDatabase() {
         } else { // Restaurant does not exist in the database
           callback('Restaurant does not exist', null);
         }
-      }
-    });
-  }
-
-  
-  /**
-   * Fetch restaurants by a cuisine type with proper error handling.
-   */
-  static fetchRestaurantByCuisine(cuisine, callback) {
-    // Fetch all restaurants  with proper error handling
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        // Filter restaurants to have only given cuisine type
-        const results = restaurants.filter(r => r.cuisine_type == cuisine);
-        callback(null, results);
-      }
-    });
-  }
-
-  /**
-   * Fetch restaurants by a neighborhood with proper error handling.
-   */
-  static fetchRestaurantByNeighborhood(neighborhood, callback) {
-    // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        // Filter restaurants to have only given neighborhood
-        const results = restaurants.filter(r => r.neighborhood == neighborhood);
-        callback(null, results);
       }
     });
   }
@@ -191,7 +165,13 @@ static openDatabase() {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}.jpg`);
+    
+    if(restaurant.photograph){
+      return (`/img/${restaurant.photograph}.jpg`);
+    }
+    else {
+      return (`/img/10.jpg`);
+    }
   }
 
   /**
