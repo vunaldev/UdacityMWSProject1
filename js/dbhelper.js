@@ -37,8 +37,7 @@ static openDatabase() {
 
         if(restaurants.length === 0) {
 
-          fetch('http://localhost:1337/restaurants', {
-            credentials: 'same-origin'
+          fetch('http://localhost:1337/restaurants', {            
           }).then(response =>
              response.json()
           ).then(result => {
