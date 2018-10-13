@@ -1,5 +1,3 @@
-//import idb from 'idb';
-
 /**
  * Common database helper functions.
  */
@@ -17,9 +15,6 @@ class DBHelper {
 static openDatabase() {
   return idb.open('restaurants', 1, function(upgradeDB) {
       var store = upgradeDB.createObjectStore('allrestaurants', {keyPath: 'id'});
-
-      //store.createIndex('cuisine','cuisine_type');
-      //store.createIndex('neighbor','neighborhood');
   });
 }
 
@@ -187,16 +182,5 @@ static openDatabase() {
       marker.addTo(newMap);
     return marker;
   } 
-  /* static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
-    return marker;
-  } */
-
 }
 
