@@ -139,7 +139,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML =  new Date(review.updatedAt).toDateString();  
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -147,7 +147,7 @@ createReviewHTML = (review) => {
   li.appendChild(rating);
 
   const comments = document.createElement('p');
-  comments.innerHTML = review.comments;
+  comments.innerHTML = review.comment;
   li.appendChild(comments);
 
   return li;
@@ -178,3 +178,23 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+const form = document.getElementById("add-form");
+form.addEventListener("submit", function (event) {
+
+  event.preventDefault();
+  
+  let review = {"restaurant_id": self.restaurant.id};
+  
+	const formdata = new FormData(form);
+	for (var [key, value] of formdata.entries()) {
+		review[key] = value;
+	}
+	DBHelper.postReview(review)
+		.then(data => {
+			const ul = document.getElementById('reviews-list');
+			ul.appendChild(createReviewHTML(review));
+			form.reset();
+		})
+		.catch(error => console.error(error))
+});

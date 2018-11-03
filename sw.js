@@ -5,7 +5,7 @@ self.addEventListener('install', function(event) {
         'index.html',
         'restaurant.html',
         'manifest.json',
-        //'css/styles.css',
+        'css/styles.css',
         'js/dbhelper.js',
         'js/main.js',
         'js/restaurant_info.js',
@@ -76,4 +76,12 @@ self.addEventListener('fetch', function(event) {
     );
 });
 
+self.addEventListener('online', e => {
+    console.log("online");
+    //DBHelper.postOfflineReviews();
+});
+
+self.addEventListener('offline', e => {
+    console.log("offline");
+});
 

@@ -6,6 +6,8 @@ class DBHelper {
 static openDatabase() {
   return idb.open('restaurants', 1, function(upgradeDB) {
       var store = upgradeDB.createObjectStore('allrestaurants', {keyPath: 'id'});
+      upgradeDB.createObjectStore('allreviews', {keyPath: 'id'});
+      upgradeDB.createObjectStore('offlinereviews', {keyPath: 'updatedAt'});
   });
 }
 
@@ -172,5 +174,114 @@ static openDatabase() {
       marker.addTo(newMap);
     return marker;
   } 
+
+
+  static fetchRestaurantReviews(restaurant, callback) {
+      //check cached data
+      DBHelper.openDatabase().then(db => {
+        if(!db) {
+          return;
+        }
+  
+        const transaction = db.transaction('allreviews');
+        const store = transaction.objectStore('allreviews');
+  
+        store.getAll().then(reviews => {
+  
+          //If 0 fetch all
+          if(reviews.length === 0) {
+  
+            fetch(`http://localhost:1337/reviews/restauran_id=${restaurant.id}`, {            
+            }).then(response =>
+               response.json()
+            ).then(reviewList => {
+        
+              //add to idb
+              const transaction = db.transaction('allreviews', 'readwrite');
+              const store = transaction.objectStore('allreviews');
+  
+              for(let review of reviewList) {
+                store.put(review);
+              }
+
+              callback(null, reviewList);            
+        
+            }).catch(error =>  callback(error, null));
+          }
+          else {
+            callback(null, reviews);            
+          } 
+        })
+      })  
+  }
+
+  static postReview(review, callback) {
+
+    return fetch(`http://localhost:1337/reviews`, {
+      body: JSON.stringify(review),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "POST"
+    }).then(res => {
+      res.json().then(review => {
+        
+        DBHelper.openDatabase().then(db => {
+          if(!db) {
+            return;
+          }
+
+          const tx = db.transaction('allreviews', 'readwrite');
+          const store = tx.objectStore('allreviews');
+          store.put(review);
+
+          return review;
+        });                  
+      })
+    })
+    .catch(err => {
+      review["updatedAt"] = new Date().getTime();
+      review["createdAt"] = new Date().getTime();      
+
+      DBHelper.openDatabase().then(db => {
+        if(!db) {
+          return;
+        }
+        const txoffline = db.transaction('offlinereviews', 'readwrite');
+        const storeoffline = txoffline.objectStore('offlinereviews');
+        storeoffline.put(review);
+
+      });
+
+    });
+  }
+
+  static postOfflineReviews() {
+
+		DBHelper.openDatabase().then(db => {
+      if (!db) {
+        return;
+      }
+      
+      const txoffline = db.transaction('offlinereviews');
+      const storeoffline = txoffline.objectStore('offlinereviews');
+      
+			storeoffline.getAll().then(offlineReviews => {
+
+				offlineReviews.forEach(review => {
+					DBHelper.postReview(review);
+        })
+        
+        DBHelper.openDatabase().then(db => {
+          const txoffline = db.transaction('offlinereviews', 'readwrite');
+          const storeoffline = txoffline.objectStore('offlinereviews').clear();
+        })
+        return;
+        
+			})
+		})
+	}
+
 }
 
