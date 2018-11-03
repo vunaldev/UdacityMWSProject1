@@ -5,7 +5,7 @@ self.addEventListener('install', function(event) {
         'index.html',
         'restaurant.html',
         'manifest.json',
-        'css/styles.css',
+        //'css/styles.css',
         'js/dbhelper.js',
         'js/main.js',
         'js/restaurant_info.js',

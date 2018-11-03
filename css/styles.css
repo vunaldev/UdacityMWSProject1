@@ -295,7 +295,7 @@ nav h1 a {
   width: 100%;
 }
 
-#restaurant-container, #reviews-container {
+#restaurant-container, #reviews-container, #adding-review-container {
   border-bottom: 1px solid #d9d9d9;
   border-top:1px solid #fff;
   padding: 0;
@@ -312,6 +312,58 @@ nav h1 a {
   border-top: 1px solid #fff;
   padding: 10px 40px 30px 10px;
   width: calc(50% - 40px)
+}
+
+#adding-review-container {
+  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #fff;
+  padding: 10px 40px 80px 10px;
+  width: calc(50% - 40px);
+  display: flex;
+  flex-direction: column;
+}
+
+#add-form {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.adding-review-container .add-form button {
+  border: 3px solid #eee;
+  font-size: 1.3em;
+  margin-top: 1em;
+  background-color: #ff9f2d;
+  padding: 1em;  
+}
+
+.adding-review-container .add-form input,
+.adding-review-container .add-form textarea,
+.adding-review-container .add-form select {
+  border-radius: 3px;
+  border: none;  
+  background-color: #fff;
+  padding: 1em;
+}
+
+.adding-review-container .add-form  label {
+  font-size: 1.15em;  
+  padding: 0.5em;
+}
+
+.adding-review-container h2 {
+    background-color: #333;
+    color: #ddd;
+    font-size: 1em;
+    font-weight: 300;
+    letter-spacing: 10px;
+    margin: 0 0 20px;
+    text-align: center;
+    text-transform: uppercase;
+    width: calc(100% - 40px);
+    padding: 20px 20px 10px 20px;
 }
 
 #reviews-container h2 {
@@ -431,6 +483,13 @@ nav h1 a {
     width: calc(100% - 40px)
   }
   
+  #adding-review-container {
+    border-bottom: 1px solid #d9d9d9;
+    border-top: 1px solid #fff;
+    padding: 10px 40px 30px 10px;
+    width: calc(100% - 40px)
+  }
+  
 
   .inside #restaurant-name {
     text-align: center;
@@ -521,6 +580,12 @@ nav h1 a {
     width: calc(100% - 40px)
   }
   
+  #adding-review-container {
+    border-bottom: 1px solid #d9d9d9;
+    border-top: 1px solid #fff;
+    padding: 10px 40px 30px 10px;
+    width: calc(100% - 40px)
+  }
 
   .inside #restaurant-name {
     text-align: center;
