@@ -215,6 +215,32 @@ static openDatabase() {
       })  
   }
 
+  static setFavorite(restaurantId){
+
+    DBHelper.openDatabase().then(function (db) {
+
+      const tx = db.transaction('allrestaurants', 'readwrite');
+      const store = tx.objectStore('allrestaurants');
+      return store.get(restaurantId);
+  
+    }).then(restaurant => {
+  
+      const isFavorite = !(restaurant.is_favorite == 'true');
+      restaurant.is_favorite = isFavorite.toString();
+  
+      return DBHelper.openDatabase().then(function (db) {
+  
+        const tx = db.transaction('allrestaurants', 'readwrite');
+        const store = tx.objectStore('allrestaurants');
+  
+        store.put(restaurant);
+  
+        return store.complete;
+  
+      }).catch((err) => console.log(err))
+    })
+  }
+
   static postReview(review, callback) {
 
     return fetch(`http://localhost:1337/reviews`, {

@@ -167,6 +167,24 @@ createRestaurantHTML = (restaurant) => {
 
   li.append(image);
 
+  const isRestaurantFavorite = (restaurant.is_favorite == 'true');
+  const favoriteBtn = document.createElement('button');
+
+  if (!isRestaurantFavorite) {
+    favoriteBtn.setAttribute('aria-label', `${restaurant.name} is favorite`);
+    favoriteBtn.innerHTML = 'Add to Favorites';
+  } else {
+    favoriteBtn.setAttribute('aria-label', `${restaurant.name} is not favoritee`);
+    favoriteBtn.innerHTML = 'Remove From Favorites';
+    favoriteButton.setAttribute('faved', '');
+  }
+
+  favoriteBtn.setAttribute('restaurantId', restaurant.id);
+  favoriteBtn.setAttribute('restaurantname', restaurant.name);
+  favoriteBtn.id = `favoriteBtn${restaurant.id}`;
+
+  favoriteBtn.addEventListener('click', markFavorite);
+
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
   li.append(name);
@@ -183,8 +201,29 @@ createRestaurantHTML = (restaurant) => {
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
+  li.append(favoriteBtn);
 
   return li
+}
+const markFavorite = function (event) {
+
+  const restaurantId = parseInt(this.getAttribute('restaurantId'));
+  const favoriteBtn = document.getElementById(`favoriteBtn${restaurantId}`);
+
+  const isFav = favoriteBtn.hasAttribute('faved');
+  const restaurantName = favoriteBtn.getAttribute('restaurantname');
+
+  if (!isFav) {    
+    favoriteBtn.setAttribute('faved', '');
+    favoriteBtn.setAttribute('aria-label', `Remove ${restaurantName} from favorites`);
+    favoriteBtn.innerHTML = 'Remove From Favorites';
+  } else {
+    favoriteBtn.setAttribute('aria-label', `Mark ${restaurantName} as favorite`);
+    favoriteBtn.innerHTML = 'Add to Favorites';
+    favoriteBtn.removeAttribute('faved');
+  }
+
+  DBHelper.setFavorite(restaurantId);
 }
 
 /**
