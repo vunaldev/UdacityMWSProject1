@@ -7,18 +7,3 @@ document.addEventListener("DOMContentLoaded", event => {
     }
   });
 
-  var refreshing;
-  navigator.serviceWorker.addEventListener('controllerchange', function () {
-      if (refreshing) return;
-      window.location.reload();
-      refreshing = true;
-  })
-  
-window.addEventListener('online', e => {
-    console.log("online");
-    DBHelper.postOfflineReviews();
-});
-
-window.addEventListener('offline', e => {
-    console.log("offline");
-});

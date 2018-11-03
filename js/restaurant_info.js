@@ -83,8 +83,32 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
+
+  fetchRestaurantReviews();  
+
+}
+
+fetchRestaurantReviews = () => {
+
+
+  const restaurantId = parseInt(getParameterByName("id"));
+  
+    if (!restaurantId) {
+      return;
+    }
+  
+    DBHelper.fetchRestaurantReviews(restaurantId, (error, reviews) => {
+      
+      self.reviews = reviews;  
+      if (error || !reviews) {
+        return;
+      }
+
+      // fill reviews        
+      fillReviewsHTML(reviews);
+    });
+
+
 }
 
 /**
@@ -186,15 +210,26 @@ form.addEventListener("submit", function (event) {
   
   let review = {"restaurant_id": self.restaurant.id};
   
-	const formdata = new FormData(form);
-	for (var [key, value] of formdata.entries()) {
+	let reviewsForm = new FormData(form);
+	for (var [key, value] of reviewsForm.entries()) {
 		review[key] = value;
-	}
+  }
+  
 	DBHelper.postReview(review)
 		.then(data => {
-			const ul = document.getElementById('reviews-list');
-			ul.appendChild(createReviewHTML(review));
+      const ul = document.getElementById('reviews-list');
+      
+      ul.appendChild(createReviewHTML(review));
 			form.reset();
 		})
 		.catch(error => console.error(error))
+});
+
+window.addEventListener('online', e => {
+  console.log("online");
+  DBHelper.postOfflineReviews();
+});
+
+window.addEventListener('offline', e => {
+  console.log("offline");
 });

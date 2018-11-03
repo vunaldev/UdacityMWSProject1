@@ -479,14 +479,14 @@ nav h1 a {
   #reviews-container {
     border-bottom: 1px solid #d9d9d9;
     border-top: 1px solid #fff;
-    padding: 10px 40px 30px 10px;
+    padding: 10px 40px 30px 0px;
     width: calc(100% - 40px)
   }
   
   #adding-review-container {
     border-bottom: 1px solid #d9d9d9;
     border-top: 1px solid #fff;
-    padding: 10px 40px 80px 10px;
+    padding: 10px 40px 80px 0px;
     width: calc(100% - 40px)
   }
   
@@ -576,14 +576,14 @@ nav h1 a {
   #reviews-container {
     border-bottom: 1px solid #d9d9d9;
     border-top: 1px solid #fff;
-    padding: 10px 40px 30px 10px;
+    padding: 10px 40px 30px 0px;
     width: calc(100% - 40px)
   }
   
   #adding-review-container {
     border-bottom: 1px solid #d9d9d9;
     border-top: 1px solid #fff;
-    padding: 10px 40px 80px 10px;
+    padding: 10px 40px 80px 0px;
     width: calc(100% - 40px)
   }
 

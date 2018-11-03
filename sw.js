@@ -75,13 +75,3 @@ self.addEventListener('fetch', function(event) {
         })
     );
 });
-
-self.addEventListener('online', e => {
-    console.log("online");
-    //DBHelper.postOfflineReviews();
-});
-
-self.addEventListener('offline', e => {
-    console.log("offline");
-});
-
