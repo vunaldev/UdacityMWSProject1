@@ -99,7 +99,6 @@ fetchRestaurantReviews = () => {
   
     DBHelper.fetchRestaurantReviews(restaurantId, (error, reviews) => {
       
-      self.reviews = reviews;  
       if (error || !reviews) {
         return;
       }
@@ -226,7 +225,6 @@ form.addEventListener("submit", function (event) {
 });
 
 window.addEventListener('online', e => {
-  console.log("online");
   DBHelper.postOfflineReviews();
 });
 
